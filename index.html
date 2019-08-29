@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Country Search</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6e6e6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        form.searchbar input[type=text] {
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid black;
+            float: left;
+            width: 80%;
+            background: #f1f1f1;
+        }
+
+        form.searchbar button {
+            float: left;
+            width: 20%;
+            padding: 10px;
+            background: #33ccff;
+            color: white;
+            font-size: 17px;
+            border: 1px solid black;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        form.searchbar button:hover {
+            background: #0b7dda;
+        }
+
+        form.searchbar::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        #tbl-countries {
+            width: 70%;
+        }
+
+        img{
+        	height:50px;
+        	width:100px;
+
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <h2>Country Search</h2>
+        <div>
+            <form class="searchbar" style="margin:auto;max-width:300px">
+                <input id="srch-input" type="text" placeholder="Search.." name="search">
+                <button id ="srch-button" type="button"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div id="loader"><center><b><h5>No result found!</h5></b></center></div>
+        <div>
+        	<br>
+            <table id="tbl-countries" class="table table-hover" class="table table-striped">
+                <thead>
+                	<tr>
+	                    <th>Country</th>
+	                    <th>Flag</th>
+	                    <th>Code</th>
+	                    <th>Population</th>
+	                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </center>
+    <script>
+        $(document).ready(function(){
+        	$('#loader').hide();
+        	$('#srch-input').click(function() {
+	            $('#tbl-countries tbody tr').remove();
+	        });
+			$("#srch-button").click(function(){
+				var input = $('#srch-input').val().toLowerCase();
+
+				var url = 'https://restcountries.eu/rest/v2/name/';
+
+			  	$.get(url + input, function(data, status){
+			    	for(var i = 0; i < data.length; ++i){
+			    		if(data[i].name.toLowerCase().includes(input)){
+			    			$('#tbl-countries').append('<tr><td>'+data[i].name+'</td><td><img src='+data[i].flag+' /></td><td>'+data[i].alpha2Code+'</td><td>'+data[i].population+'</td></tr>');
+			    		}
+			    	}
+			    	$('#loader').hide();
+			  	}).fail(function() {
+			  		$('#loader').show();
+				});;
+			});
+
+		});
+    
+    </script>
+</body>
+</html>
